@@ -16,3 +16,16 @@ def practice_report(request):
         'total_prescriptions': total_prescriptions,
     }
     return render(request, 'reports/report.html', context)
+
+@login_required
+def graphs(request):
+    # Pass the same totals so Chart.js can render a sample graph.
+    total_patients = Patient.objects.count()
+    total_appointments = Appointment.objects.count()
+    total_prescriptions = Prescription.objects.count()
+    context = {
+        'total_patients': total_patients,
+        'total_appointments': total_appointments,
+        'total_prescriptions': total_prescriptions,
+    }
+    return render(request, 'reports/graphs.html', context)

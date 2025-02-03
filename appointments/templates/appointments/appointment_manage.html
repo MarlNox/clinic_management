@@ -1,0 +1,12 @@
+<!-- appointments/templates/appointments/appointment_manage.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Manage Appointment for {{ appointment.patient.first_name }} {{ appointment.patient.last_name }} on {{ appointment.date }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Update Appointment</button>
+    </form>
+</div>
+{% endblock %}

@@ -10,6 +10,11 @@ class Appointment(models.Model):
     end_time = models.TimeField()
     notes = models.TextField(blank=True, null=True)
     is_recurring = models.BooleanField(default=False)
+    # New fields for post-appointment management:
+    doctor_notes = models.TextField(blank=True, null=True)
+    updated_diagnosis = models.TextField(blank=True, null=True)
+    updated_medications = models.ManyToManyField('prescriptions.Medication', blank=True, related_name='appointment_updates')
+    is_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Appointment with {self.patient} on {self.date}"

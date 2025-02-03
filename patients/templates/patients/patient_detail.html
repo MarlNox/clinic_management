@@ -5,6 +5,8 @@
     <h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
     <p><strong>Contact:</strong> {{ patient.contact_number }}</p>
     <p><strong>Email:</strong> {{ patient.email }}</p>
+    <p><strong>Current Diagnosis:</strong> {{ patient.current_diagnosis }}</p>
+    <p><strong>DSMV Categorization:</strong> {{ patient.dsmv_categorization }}</p>
     <hr>
     <h3>Medical History</h3>
     {% if patient.medical_histories.all %}
@@ -42,5 +44,27 @@
         {{ document_form.as_p }}
         <button type="submit" class="btn btn-secondary">Upload Document</button>
     </form>
+    <hr>
+    <h3>Prescription History</h3>
+    {% if prescriptions %}
+        <ul>
+        {% for prescription in prescriptions %}
+            <li>
+                <strong>Date:</strong> {{ prescription.issued_date }} - 
+                <strong>Medications:</strong>
+                <ul>
+                    {% for med in prescription.medications.all %}
+                        <li>{{ med.name }}: {{ med.dosage_instructions }}</li>
+                    {% endfor %}
+                </ul>
+                {% if prescription.source_appointment %}
+                    (Updated from appointment on {{ prescription.source_appointment.date }})
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No prescriptions found.</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -15,6 +15,8 @@ class Prescription(models.Model):
     medications = models.ManyToManyField(Medication)
     issued_date = models.DateField(auto_now_add=True)
     notes = models.TextField(blank=True, null=True)
+    # New field to track if the prescription was updated via an appointment:
+    source_appointment = models.ForeignKey('appointments.Appointment', null=True, blank=True, on_delete=models.SET_NULL, related_name='prescriptions_created')
 
     def __str__(self):
         return f"Prescription for {self.patient} on {self.issued_date}"

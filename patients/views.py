@@ -17,10 +17,12 @@ def patient_detail(request, pk):
     history_instance = patient.medical_histories.last() if patient.medical_histories.exists() else None
     history_form = MedicalHistoryForm(instance=history_instance)
     document_form = DocumentForm()
+    prescriptions = patient.prescriptions.all().order_by('-issued_date')
     return render(request, 'patients/patient_detail.html', {
         'patient': patient,
         'history_form': history_form,
-        'document_form': document_form
+        'document_form': document_form,
+        'prescriptions': prescriptions,
     })
 
 @login_required

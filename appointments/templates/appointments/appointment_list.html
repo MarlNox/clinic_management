@@ -12,6 +12,7 @@
                 <th>Date</th>
                 <th>Time</th>
                 <th>Recurring</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,10 +22,17 @@
                 <td>{{ appointment.date }}</td>
                 <td>{{ appointment.start_time }} - {{ appointment.end_time }}</td>
                 <td>{{ appointment.is_recurring|yesno:"Yes,No" }}</td>
+                <td>
+                  {% if appointment.is_completed %}
+                    Completed
+                  {% else %}
+                    <a href="{% url 'appointment_manage' appointment.pk %}" class="btn btn-sm btn-primary">Manage</a>
+                  {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">No appointments scheduled.</td>
+                <td colspan="5">No appointments scheduled.</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -7,7 +7,8 @@ class PatientForm(forms.ModelForm):
         model = Patient
         fields = [
             'first_name', 'last_name', 'date_of_birth', 'contact_number',
-            'email', 'emergency_contact', 'emergency_phone', 'address'
+            'email', 'emergency_contact', 'emergency_phone', 'address',
+            'current_diagnosis', 'dsmv_categorization'  # new fields
         ]
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
@@ -18,6 +19,8 @@ class PatientForm(forms.ModelForm):
             'emergency_contact': forms.TextInput(attrs={'class': 'form-control'}),
             'emergency_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'current_diagnosis': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'dsmv_categorization': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class MedicalHistoryForm(forms.ModelForm):

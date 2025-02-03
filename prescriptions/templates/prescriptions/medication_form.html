@@ -1,0 +1,12 @@
+<!-- prescriptions/templates/prescriptions/medication_form.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Add Medication</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save Medication</button>
+    </form>
+</div>
+{% endblock %}

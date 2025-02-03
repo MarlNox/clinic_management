@@ -77,15 +77,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
 
-# Additional directories where Django will look for static files
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # This should point to your custom static directory
+    BASE_DIR / "static",
 ]
 
-# Directory where collectstatic will collect static files for production
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

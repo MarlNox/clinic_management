@@ -1,8 +1,8 @@
 # appointments/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Appointment
-from .forms import AppointmentForm
+from .forms import AppointmentForm, AppointmentManageForm
 from django.contrib import messages
 import datetime
 
@@ -25,7 +25,33 @@ def appointment_create(request):
 
 @login_required
 def appointment_calendar(request):
-    # For demonstration, show appointments for the current month.
-    today = datetime.date.today()
-    appointments = Appointment.objects.filter(date__month=today.month, date__year=today.year)
+    # Now shows all appointments ordered by date/time.
+    appointments = Appointment.objects.all().order_by('date', 'start_time')
     return render(request, 'appointments/appointment_calendar.html', {'appointments': appointments})
+
+@login_required
+def appointment_manage(request, pk):
+    appointment = get_object_or_404(Appointment, pk=pk)
+    if request.method == "POST":
+        form = AppointmentManageForm(request.POST, instance=appointment)
+        if form.is_valid():
+            appointment = form.save()
+            # Update patient current diagnosis if provided.
+            if appointment.updated_diagnosis:
+                patient = appointment.patient
+                patient.current_diagnosis = appointment.updated_diagnosis
+                patient.save()
+            # If updated medications were selected, create a new Prescription record.
+            if appointment.updated_medications.exists():
+                from prescriptions.models import Prescription
+                prescription = Prescription.objects.create(
+                    patient=appointment.patient,
+                    source_appointment=appointment,
+                )
+                prescription.medications.set(appointment.updated_medications.all())
+                prescription.save()
+            messages.success(request, "Appointment updated successfully.")
+            return redirect('appointment_list')
+    else:
+        form = AppointmentManageForm(instance=appointment)
+    return render(request, 'appointments/appointment_manage.html', {'form': form, 'appointment': appointment})

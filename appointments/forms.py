@@ -14,3 +14,15 @@ class AppointmentForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'is_recurring': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+# NEW: Form for managing (post-appointment) updates
+class AppointmentManageForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['doctor_notes', 'updated_diagnosis', 'updated_medications', 'is_completed']
+        widgets = {
+            'doctor_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'updated_diagnosis': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'updated_medications': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

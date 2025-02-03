@@ -4,13 +4,20 @@
 <div class="container mt-5">
     <h2>Appointment Calendar</h2>
     <div id="calendar">
-        <!-- For a modern UI, you might integrate FullCalendar here -->
         {% regroup appointments by date as date_list %}
         {% for group in date_list %}
             <h3>{{ group.grouper }}</h3>
             <ul>
                 {% for appointment in group.list %}
-                    <li>{{ appointment.start_time }} - {{ appointment.end_time }}: {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</li>
+                    <li>
+                        {{ appointment.start_time }} - {{ appointment.end_time }}: 
+                        {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                        {% if appointment.is_completed %}
+                          (Completed)
+                        {% else %}
+                          (<a href="{% url 'appointment_manage' appointment.pk %}">Manage</a>)
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% endfor %}

@@ -1,0 +1,42 @@
+<!-- reports/templates/reports/graphs.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Graphs</h2>
+    <p>Placeholder for graphs. Integrate Chart.js or another library to display graphs.</p>
+    <!-- Example: a canvas for Chart.js -->
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['Patients', 'Appointments', 'Prescriptions'],
+              datasets: [{
+                  label: '# of Records',
+                  data: [{{ total_patients }}, {{ total_appointments }}, {{ total_prescriptions }}],
+                  backgroundColor: [
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+    </script>
+</div>
+{% endblock %}
