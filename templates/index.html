@@ -1,0 +1,16 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+{% load static %}  <!-- Only needed if you use the static tag in this file -->
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to Clinic Management System</h1>
+        <p class="lead">Manage patients, appointments, prescriptions, and more with ease.</p>
+        {% if not user.is_authenticated %}
+        <hr class="my-4">
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

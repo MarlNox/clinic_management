@@ -1,0 +1,12 @@
+<!-- reports/templates/reports/report.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Practice Report</h2>
+    <ul class="list-group">
+        <li class="list-group-item">Total Patients: {{ total_patients }}</li>
+        <li class="list-group-item">Total Appointments: {{ total_appointments }}</li>
+        <li class="list-group-item">Total Prescriptions: {{ total_prescriptions }}</li>
+    </ul>
+</div>
+{% endblock %}

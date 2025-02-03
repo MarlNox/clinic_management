@@ -1,0 +1,18 @@
+# appointments/models.py
+from django.db import models
+from django.urls import reverse
+from patients.models import Patient
+
+class Appointment(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    notes = models.TextField(blank=True, null=True)
+    is_recurring = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Appointment with {self.patient} on {self.date}"
+
+    def get_absolute_url(self):
+        return reverse('appointment_detail', kwargs={'pk': self.pk})

@@ -1,0 +1,33 @@
+<!-- appointments/templates/appointments/appointment_list.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Appointments</h2>
+    <a href="{% url 'appointment_create' %}" class="btn btn-success mb-3">Schedule Appointment</a>
+    <a href="{% url 'appointment_calendar' %}" class="btn btn-info mb-3">View Calendar</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Recurring</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.start_time }} - {{ appointment.end_time }}</td>
+                <td>{{ appointment.is_recurring|yesno:"Yes,No" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No appointments scheduled.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

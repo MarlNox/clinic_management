@@ -1,0 +1,12 @@
+<!-- patients/templates/patients/patient_form.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{% if form.instance.pk %}Edit Patient{% else %}Add New Patient{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+</div>
+{% endblock %}

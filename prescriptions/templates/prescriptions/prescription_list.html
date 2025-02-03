@@ -1,0 +1,36 @@
+<!-- prescriptions/templates/prescriptions/prescription_list.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Prescriptions</h2>
+    <a href="{% url 'prescription_create' %}" class="btn btn-success mb-3">Create Prescription</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Issued Date</th>
+                <th>Medications</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prescription in prescriptions %}
+            <tr>
+                <td>{{ prescription.patient.first_name }} {{ prescription.patient.last_name }}</td>
+                <td>{{ prescription.issued_date }}</td>
+                <td>
+                    <ul>
+                    {% for med in prescription.medications.all %}
+                        <li>{{ med.name }}: {{ med.dosage_instructions }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No prescriptions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
