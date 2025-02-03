@@ -1,9 +1,11 @@
 # patients/views.py
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 from .models import Patient
 from .forms import PatientForm, MedicalHistoryForm, DocumentForm
-from django.contrib import messages
 
 @login_required
 def patient_list(request):
@@ -13,16 +15,27 @@ def patient_list(request):
 @login_required
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
-    # Get the latest medical history if it exists:
+
+    # Medical History
     history_instance = patient.medical_histories.last() if patient.medical_histories.exists() else None
     history_form = MedicalHistoryForm(instance=history_instance)
+
+    # Document upload
     document_form = DocumentForm()
+
+    # Prescriptions
     prescriptions = patient.prescriptions.all().order_by('-issued_date')
+
+    # NEW: Ad Hoc Notes
+    # (We assume you already imported AdHocNote or can do patient.ad_hoc_notes from related_name)
+    ad_hoc_notes = patient.ad_hoc_notes.all().order_by('-created_at')
+
     return render(request, 'patients/patient_detail.html', {
         'patient': patient,
         'history_form': history_form,
         'document_form': document_form,
         'prescriptions': prescriptions,
+        'ad_hoc_notes': ad_hoc_notes,
     })
 
 @login_required

@@ -5,8 +5,60 @@
     <h2>Add Medication</h2>
     <form method="post">
         {% csrf_token %}
+        <h4>Medication Details</h4>
         {{ form.as_p }}
+        <hr>
+        <h4>Active Principles</h4>
+        {{ formset.management_form }}
+        <div id="active-principles-formset">
+            {% for form in formset %}
+            <div class="active-principle-form mb-3">
+                <div class="row">
+                    <div class="col-md-5">
+                        {{ form.name.label_tag }} {{ form.name }}
+                    </div>
+                    <div class="col-md-5">
+                        {{ form.chemical_dosage.label_tag }} {{ form.chemical_dosage }}
+                    </div>
+                    <div class="col-md-2">
+                        {% if form.instance.pk %}
+                        <label>Delete</label>
+                        {{ form.DELETE }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-secondary" id="add-active-principle">Add Active Principle</button>
+        <br><br>
         <button type="submit" class="btn btn-success">Save Medication</button>
     </form>
 </div>
+
+<!-- Include jQuery (or use your preferred library) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var formIdx = {{ formset.total_form_count }};
+        $('#add-active-principle').click(function(){
+            // Clone the first active principle form
+            var newForm = $('#active-principles-formset .active-principle-form:first').clone();
+            // Clear input values in the cloned form
+            newForm.find(':input').each(function(){
+                var nameAttr = $(this).attr('name');
+                if (nameAttr) {
+                    // Replace the index in the name (assumes prefix "activeprinciples")
+                    var newName = nameAttr.replace(/activeprinciples-\d+-/, 'activeprinciples-' + formIdx + '-');
+                    $(this).attr('name', newName).val('');
+                }
+            });
+            // Append the cloned form to the formset container
+            $('#active-principles-formset').append(newForm);
+            // Increment the TOTAL_FORMS count
+            var totalForms = $('#id_activeprinciples-TOTAL_FORMS');
+            totalForms.val(++formIdx);
+        });
+    });
+</script>
 {% endblock %}

@@ -50,11 +50,14 @@
         <ul>
         {% for prescription in prescriptions %}
             <li>
-                <strong>Date:</strong> {{ prescription.issued_date }} - 
-                <strong>Medications:</strong>
+                <strong>Date:</strong> {{ prescription.issued_date }}
                 <ul>
-                    {% for med in prescription.medications.all %}
-                        <li>{{ med.name }}: {{ med.dosage_instructions }}</li>
+                    {% for pm in prescription.prescription_medications.all %}
+                        <li>
+                            {{ pm.medication.name }} 
+                            | Dosage: {{ pm.dosage }} 
+                            | Frequency: {{ pm.frequency }}
+                        </li>
                     {% endfor %}
                 </ul>
                 {% if prescription.source_appointment %}
@@ -66,5 +69,21 @@
     {% else %}
         <p>No prescriptions found.</p>
     {% endif %}
+    <hr>
+
+    <!-- Ad Hoc Notes Section -->
+    <h3>Ad Hoc Notes</h3>
+    {% if ad_hoc_notes %}
+      <ul>
+        {% for adhoc in ad_hoc_notes %}
+          <li>
+            <strong>{{ adhoc.created_at|date:"Y-m-d H:i" }}:</strong> {{ adhoc.note }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No ad hoc notes yet.</p>
+    {% endif %}
+    <a href="{% url 'ad_hoc_note_create' %}" class="btn btn-info">Add Ad Hoc Note</a>
 </div>
 {% endblock %}

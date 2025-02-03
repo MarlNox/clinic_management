@@ -1,10 +1,10 @@
 # appointments/views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Appointment
 from .forms import AppointmentForm, AppointmentManageForm
 from django.contrib import messages
-import datetime
 
 @login_required
 def appointment_list(request):
@@ -25,7 +25,6 @@ def appointment_create(request):
 
 @login_required
 def appointment_calendar(request):
-    # Now shows all appointments ordered by date/time.
     appointments = Appointment.objects.all().order_by('date', 'start_time')
     return render(request, 'appointments/appointment_calendar.html', {'appointments': appointments})
 
@@ -36,22 +35,34 @@ def appointment_manage(request, pk):
         form = AppointmentManageForm(request.POST, instance=appointment)
         if form.is_valid():
             appointment = form.save()
-            # Update patient current diagnosis if provided.
+            # Update patient current diagnosis if provided
             if appointment.updated_diagnosis:
                 patient = appointment.patient
                 patient.current_diagnosis = appointment.updated_diagnosis
                 patient.save()
             # If updated medications were selected, create a new Prescription record.
             if appointment.updated_medications.exists():
-                from prescriptions.models import Prescription
+                from prescriptions.models import Prescription, PrescriptionMedication
                 prescription = Prescription.objects.create(
                     patient=appointment.patient,
                     source_appointment=appointment,
                 )
-                prescription.medications.set(appointment.updated_medications.all())
+                # Create bridging objects for each updated medication
+                for med in appointment.updated_medications.all():
+                    PrescriptionMedication.objects.create(
+                        prescription=prescription,
+                        medication=med,
+                        dosage="(Not specified)",
+                        frequency="(Not specified)"
+                    )
                 prescription.save()
+
             messages.success(request, "Appointment updated successfully.")
             return redirect('appointment_list')
     else:
         form = AppointmentManageForm(instance=appointment)
-    return render(request, 'appointments/appointment_manage.html', {'form': form, 'appointment': appointment})
+
+    return render(request, 'appointments/appointment_manage.html', {
+        'form': form,
+        'appointment': appointment
+    })
